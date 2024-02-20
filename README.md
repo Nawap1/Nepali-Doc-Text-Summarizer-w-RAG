@@ -1,2 +1,2 @@
 # Nepali-Summarizer
-Nepali Summarization App using RAG
+Nepali Documents Summarization App using RAG
