@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+PyPDF2
+langchain
+torch
+dotenv
+transformers
+huggingface-hub

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocSum</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .logo-container {
+            display: inline-block;
+            background: linear-gradient(135deg, #052F5F, #005377);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(5, 47, 95, 0.2);
+        }
+        h1 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            color: #06A77D;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        .accent-line {
+            width: 60px;
+            height: 4px;
+            background-color: #06A77D;
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+        .upload-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .file-input-wrapper {
+            margin-bottom: 1.5rem;
+        }
+        #fileInput {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #005377;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .file-label:hover {
+            background-color: #052F5F;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #06A77D;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #058c68;
+        }
+        #summaryOutput {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #selectedFileName {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <h1>DocSum</h1>
+            </div>
+            <div class="subtitle">Intelligent Document Summarization</div>
+            <div class="accent-line"></div>
+        </div>
+        <div class="upload-container">
+            <div class="file-input-wrapper">
+                <label for="fileInput" class="file-label">Choose File</label>
+                <input type="file" id="fileInput" onChange="updateFileName()">
+                <div id="selectedFileName"></div>
+            </div>
+            <button onclick="summarizeDocument()">Summarize Document</button>
+        </div>
+        <div id="summaryOutput"></div>
+    </div>
+
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('selectedFileName');
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        async function summarizeDocument() {
+            const fileInput = document.getElementById('fileInput');
+            const summaryOutput = document.getElementById('summaryOutput');
+            const file = fileInput.files[0];
+           
+            if (!file) {
+                summaryOutput.innerHTML = '<p style="color: #d32f2f;">Please select a file to summarize.</p>';
+                return;
+            }
+
+            summaryOutput.innerHTML = '<p style="color: #06A77D;">Processing your document...</p>';
+            
+            try {
+                const formData = new FormData();
+                formData.append('document', file);
+                const response = await fetch('http://localhost:8000/summarize/', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.text();
+                summaryOutput.innerHTML = `<h3 style="color: #052F5F; margin-top: 0;">Summary</h3><p>${data}</p>`;
+            } catch (error) {
+                summaryOutput.innerHTML = '<p style="color: #d32f2f;">An error occurred while processing your document. Please try again.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
