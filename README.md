@@ -7,8 +7,6 @@
 3. [Installation](#installation)
 4. [Usage](#usage)
 5. [Technical Details](#technical-details)
-6. [Contributing](#contributing)
-7. [License](#license)
 
 ## Introduction
 
@@ -48,10 +46,3 @@ DocSum uses the following technologies:
 * **PyPDF2**: A library for reading and writing PDF files.
 * **Torch**: A library for machine learning.
 
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to DocSum, please fork the repository, make your changes, and submit a pull request.
-
-## License
-
-DocSum is licensed under the MIT License.
